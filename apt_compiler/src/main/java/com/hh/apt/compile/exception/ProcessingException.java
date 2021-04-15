@@ -1,9 +1,9 @@
-package com.jd.dypos.compile.exception;
+package com.hh.apt.compile.exception;
 
 import javax.lang.model.element.Element;
 
 /**
- * Package: com.dev.hh.dypos_aptlib_compiler
+ * Package: com.hh.apt.compile.exception
  * User: hehao3
  * Email: hehao3@jd.com
  * Date: 2021/4/12

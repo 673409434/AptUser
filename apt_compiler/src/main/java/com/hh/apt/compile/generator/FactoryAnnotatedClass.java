@@ -1,4 +1,4 @@
-package com.jd.dypos.compile.module;
+package com.hh.apt.compile.generator;
 
 import com.dev.hh.annotation.Factory;
 
@@ -7,7 +7,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
 
 /**
- * Package: com.dev.hh.dypos_aptlib_compiler
+ * Package: com.hh.apt.compile.generator
  * User: hehao3
  * Email: hehao3@jd.com
  * Date: 2021/4/12

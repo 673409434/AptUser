@@ -1,9 +1,12 @@
-package com.jd.dypos.compile;
+package com.hh.apt.compile;
 
 import com.dev.hh.annotation.Factory;
 import com.google.auto.service.AutoService;
-import com.jd.dypos.compile.exception.ProcessingException;
-import com.jd.dypos.compile.module.*;
+import com.hh.apt.compile.exception.ProcessingException;
+import com.hh.apt.compile.generator.FactoryAnnotatedClass;
+import com.hh.apt.compile.generator.FactoryClassesGenerator;
+import com.hh.apt.compile.utils.AptContext;
+import com.hh.apt.compile.utils.LogMessager;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -12,8 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -25,12 +26,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
 
 /**
- * Package: com.dev.hh.dypos_aptlib_compiler
+ * Package: com.hh.apt.compile
  * User: hehao3
  * Email: hehao3@jd.com
  * Date: 2021/4/9
@@ -42,11 +40,6 @@ import javax.tools.Diagnostic;
 //AutoService是Google开发的一个库，使用时需要添加依赖，如下：implementation 'com.google.auto.service:auto-service:1.0-rc4'
 @AutoService(Processor.class)
 public class FactoryProcessor extends AbstractProcessor {
-    private Types typeUtils;
-    private Messager messager;
-    private Filer filer;
-    private Elements elementUtils;
-    private Map<String, FactoryGroupedClasses> factoryClasses = new LinkedHashMap<>();
 
     /**
      * 这个方法用于初始化处理器，方法中有一个ProcessingEnvironment类型的参数，ProcessingEnvironment是一个注解处理工具的集合。它包含了众多工具类。例如：
@@ -59,11 +52,7 @@ public class FactoryProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
-
-        typeUtils = processingEnvironment.getTypeUtils();
-        messager = processingEnvironment.getMessager();
-        filer = processingEnvironment.getFiler();
-        elementUtils = processingEnvironment.getElementUtils();
+        AptContext.getInstance().init(processingEnvironment);
     }
 
     /**
@@ -77,11 +66,21 @@ public class FactoryProcessor extends AbstractProcessor {
         return annotations;
     }
 
+    /**
+     * 用来指示注释处理器所支持的最新源版本的注释，通常return SourceVersion.latestSupported()即可
+     * @return
+     */
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        info("startProcess");
+        LogMessager.info("startProcess");
         try {
             // 步骤一：扫描所有被@Factory注解的类元素
+            Map<String, FactoryClassesGenerator> factoryClasses = new LinkedHashMap<>();
             for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(Factory.class)) {
                 //本例中Factory注解的是类，正常情况下返回的TypeElement，如果把@Factory用在接口或者抽象类上，不符合我们的标准，这里校验报错，终止编译
                 if (annotatedElement.getKind() != ElementKind.CLASS) {
@@ -97,10 +96,10 @@ public class FactoryProcessor extends AbstractProcessor {
 
 
                 //
-                FactoryGroupedClasses factoryClass = factoryClasses.get(annotatedClass.getQualifiedFactoryGroupName());
+                FactoryClassesGenerator factoryClass = factoryClasses.get(annotatedClass.getQualifiedFactoryGroupName());
                 if (factoryClass == null) {
                     String qualifiedGroupName = annotatedClass.getQualifiedFactoryGroupName();
-                    factoryClass = new FactoryGroupedClasses(qualifiedGroupName);
+                    factoryClass = new FactoryClassesGenerator(qualifiedGroupName);
                     factoryClasses.put(qualifiedGroupName, factoryClass);
                 }
 
@@ -108,27 +107,18 @@ public class FactoryProcessor extends AbstractProcessor {
                 factoryClass.add(annotatedClass);
             }
 
-            // 生成代码
-            for (FactoryGroupedClasses factoryClass : factoryClasses.values()) {
-                factoryClass.generateCode(elementUtils, filer);
+            // 步骤二：生成代码
+            for (FactoryClassesGenerator factoryClass : factoryClasses.values()) {
+                factoryClass.generateCode();
             }
             factoryClasses.clear();
         } catch (ProcessingException e) {
-            error(e.getElement(), e.getMessage());
+            LogMessager.error(e.getElement(), e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return true;
-    }
-
-    /**
-     * 用来指示注释处理器所支持的最新源版本的注释，通常return SourceVersion.latestSupported()即可
-     * @return
-     */
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
     }
 
     /**
@@ -161,7 +151,7 @@ public class FactoryProcessor extends AbstractProcessor {
 
         // Check inheritance: Class must be child class as specified in @Factory.type();
         // 这个类必须是在@Factory.type()中指定的类的子类，否则抛出异常终止编译
-        TypeElement superClassElement = elementUtils.getTypeElement(item.getQualifiedFactoryGroupName());
+        TypeElement superClassElement = AptContext.getInstance().getElementUtils().getTypeElement(item.getQualifiedFactoryGroupName());
         if (superClassElement.getKind() == ElementKind.INTERFACE) {
             // 检查被注解类是否实现或继承了@Factory.type()所指定的类型，此处均为IShape
             if (!classElement.getInterfaces().contains(superClassElement.asType())) {
@@ -196,7 +186,7 @@ public class FactoryProcessor extends AbstractProcessor {
                 }
 
                 // Moving up in inheritance tree
-                currentClass = (TypeElement) typeUtils.asElement(superClassType);
+                currentClass = (TypeElement) AptContext.getInstance().getTypeUtils().asElement(superClassType);
             }
         }
 
@@ -220,20 +210,5 @@ public class FactoryProcessor extends AbstractProcessor {
                 classElement.getQualifiedName().toString());
     }
 
-    private void error(Element e, String msg, Object... args) {
-        messager.printMessage(Diagnostic.Kind.ERROR, String.format(msg, args), e);
-    }
-
-    private void error(String msg) {
-        messager.printMessage(Diagnostic.Kind.ERROR, msg);
-    }
-
-    private void info(String msg, Object... args) {
-        messager.printMessage(Diagnostic.Kind.NOTE, String.format(msg, args));
-    }
-
-    private void info(String msg) {
-        messager.printMessage(Diagnostic.Kind.NOTE, msg);
-    }
 
 }

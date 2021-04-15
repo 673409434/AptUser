@@ -1,10 +1,10 @@
-package com.jd.dypos.compile.exception;
+package com.hh.apt.compile.exception;
 
 
-import com.jd.dypos.compile.module.FactoryAnnotatedClass;
+import com.hh.apt.compile.generator.FactoryAnnotatedClass;
 
 /**
- * Package: com.dev.hh.dypos_aptlib_compiler
+ * Package: com.hh.apt.compile.exception
  * User: hehao3
  * Email: hehao3@jd.com
  * Date: 2021/4/12

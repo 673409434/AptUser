@@ -1,0 +1,4 @@
+include ':apt_compiler'
+include ':annotation'
+include ':app'
+rootProject.name = "aptuser"

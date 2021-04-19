@@ -50,6 +50,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation project(':factory-annotation')
-    kapt project(':apt_factory_compiler')
+    kapt project(':factory_apt_compiler')
 }
 

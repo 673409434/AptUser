@@ -1,5 +1,6 @@
-package com.dev.hh.aptuser.aptdemo;
+package com.dev.hh.aptuser.aptdemo.factory;
 
+import com.dev.hh.aptuser.aptdemo.factory.IShape;
 import com.hh.annotation.factory.Factory;
 
 /**

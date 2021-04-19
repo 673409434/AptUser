@@ -51,5 +51,11 @@ dependencies {
 
     implementation project(':factory-annotation')
     kapt project(':factory_apt_compiler')
+
+
+//    kapt project(':preferences-apt-compiler')
+//    implementation project(':preferences-annotation')
+//    implementation project(':preferences-api')
+
 }
 

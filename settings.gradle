@@ -1,4 +1,8 @@
 include ':factory_apt_compiler'
 include ':factory-annotation'
 include ':app'
+
+include ':preferences-api'
+include ':preferences-annotation'
+include ':preferences-apt-compiler'
 rootProject.name = "aptuser"

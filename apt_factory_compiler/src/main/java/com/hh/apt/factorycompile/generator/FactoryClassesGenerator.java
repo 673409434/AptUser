@@ -1,8 +1,8 @@
-package com.hh.apt.compile.generator;
+package com.hh.apt.factorycompile.generator;
 
-import com.hh.apt.compile.exception.IdAlreadyUsedException;
-import com.hh.apt.compile.utils.AptContext;
-import com.hh.apt.compile.utils.LogMessager;
+import com.hh.apt.factorycompile.exception.IdAlreadyUsedException;
+import com.hh.apt.factorycompile.utils.AptContext;
+import com.hh.apt.factorycompile.utils.LogMessager;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;

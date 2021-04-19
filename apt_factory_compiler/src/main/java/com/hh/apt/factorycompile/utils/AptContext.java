@@ -1,4 +1,4 @@
-package com.hh.apt.compile.utils;
+package com.hh.apt.factorycompile.utils;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;

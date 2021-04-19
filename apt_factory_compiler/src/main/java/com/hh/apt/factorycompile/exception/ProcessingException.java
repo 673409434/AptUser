@@ -1,4 +1,4 @@
-package com.hh.apt.compile.exception;
+package com.hh.apt.factorycompile.exception;
 
 import javax.lang.model.element.Element;
 

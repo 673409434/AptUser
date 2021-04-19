@@ -1,7 +1,7 @@
-package com.hh.apt.compile.exception;
+package com.hh.apt.factorycompile.exception;
 
 
-import com.hh.apt.compile.generator.FactoryAnnotatedClass;
+import com.hh.apt.factorycompile.generator.FactoryAnnotatedClass;
 
 /**
  * Package: com.hh.apt.compile.exception

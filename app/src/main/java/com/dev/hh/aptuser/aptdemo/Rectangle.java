@@ -1,6 +1,6 @@
 package com.dev.hh.aptuser.aptdemo;
 
-import com.dev.hh.annotation.Factory;
+import com.hh.annotation.Factory;
 
 /**
  * Package: com.dev.hh.aptuser.aptuser

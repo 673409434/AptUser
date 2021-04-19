@@ -1,12 +1,12 @@
-package com.hh.apt.compile;
+package com.hh.apt.factorycompile;
 
-import com.dev.hh.annotation.Factory;
+import com.hh.annotation.Factory;
 import com.google.auto.service.AutoService;
-import com.hh.apt.compile.exception.ProcessingException;
-import com.hh.apt.compile.generator.FactoryAnnotatedClass;
-import com.hh.apt.compile.generator.FactoryClassesGenerator;
-import com.hh.apt.compile.utils.AptContext;
-import com.hh.apt.compile.utils.LogMessager;
+import com.hh.apt.factorycompile.exception.ProcessingException;
+import com.hh.apt.factorycompile.generator.FactoryAnnotatedClass;
+import com.hh.apt.factorycompile.generator.FactoryClassesGenerator;
+import com.hh.apt.factorycompile.utils.AptContext;
+import com.hh.apt.factorycompile.utils.LogMessager;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;

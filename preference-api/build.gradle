@@ -1,8 +1,5 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-android-extensions'
-    id 'kotlin-kapt'
+    id 'com.android.library'
 }
 
 android {
@@ -10,18 +7,14 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.dev.hh.apt"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-//        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
-
+        consumerProguardFiles "consumer-rules.pro"
     }
-
 
     buildTypes {
         release {
@@ -33,30 +26,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
 }
 
 dependencies {
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation project(':factory-annotation')
-    kapt project(':factory_apt_compiler')
-
-
-    kapt project(':preferences-apt-compiler')
     implementation project(':preferences-annotation')
-    implementation project(':preference-api')
-    implementation 'com.alibaba:fastjson:1.1.45.android'
 
 }
-

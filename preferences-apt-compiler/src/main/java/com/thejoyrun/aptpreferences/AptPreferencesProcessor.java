@@ -271,7 +271,7 @@ public class AptPreferencesProcessor extends AbstractProcessor {
             List<TypeSpec> typeSpecs = getInClassTypeSpec(inClassElements);
             MethodSpec.Builder constructor = MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PUBLIC)
-                    .addStatement("mPreferences = $T.getContext().getSharedPreferences($S, 0)", ClassName.get("com.thejoyrun.aptpreferences", "AptPreferencesManager"), element.getSimpleName())
+                    .addStatement("mPreferences = $T.getContext().getSharedPreferences($S, 0)", ClassName.get("com.thejoyrun.aptpreferences.core", "AptPreferencesManager"), element.getSimpleName())
                     .addStatement("mEdit = mPreferences.edit()");
             for (TypeSpec typeSpec : typeSpecs) {
                 constructor.addStatement(String.format("this.set%s(new %s())", typeSpec.name.replace("Preferences", ""), typeSpec.name));

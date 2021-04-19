@@ -1,6 +1,6 @@
 package com.hh.apt.factorycompile.generator;
 
-import com.hh.annotation.Factory;
+import com.hh.annotation.factory.Factory;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;

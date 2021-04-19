@@ -1,6 +1,6 @@
 package com.hh.apt.factorycompile;
 
-import com.hh.annotation.Factory;
+import com.hh.annotation.factory.Factory;
 import com.google.auto.service.AutoService;
 import com.hh.apt.factorycompile.exception.ProcessingException;
 import com.hh.apt.factorycompile.generator.FactoryAnnotatedClass;
